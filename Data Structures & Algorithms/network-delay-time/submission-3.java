@@ -1,0 +1,36 @@
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        // Creating an Adjacency List for a weighted, undirected Graph.
+        Map<Integer, List<int[]>> adj = new HashMap<>();
+        for (int i=1; i <= n; i++) {
+            adj.put(i, new LinkedList<>());
+        }
+        for (int[] time : times) {
+            int s = time[0], d = time[1], w = time[2];
+            adj.get(s).add(new int[]{d, w});
+        }
+
+        // Finding min. time to reach each node.
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
+        minHeap.offer(new int[]{k, 0});
+
+        Set<Integer> visited = new HashSet<>();
+        int maxTime = 0;
+
+        while (!minHeap.isEmpty()) {
+            int[] edge = minHeap.poll();
+            int n1 = edge[0], w1 = edge[1];
+
+            if (visited.contains(n1)) continue;
+            visited.add(n1);
+            maxTime = w1;
+
+            for (int[] nei : adj.get(n1)) {
+                int n2 = nei[0], w2 = nei[1];
+                minHeap.offer(new int[]{n2, w1+w2});
+            }
+        }
+
+        return visited.size() == n ? maxTime : -1;
+    }
+}
