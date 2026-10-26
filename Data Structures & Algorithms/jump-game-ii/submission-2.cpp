@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int l = 0, r = 0, n = nums.size(), steps = 0;
+        while (l < n-1 && r < n-1) {
+            int far = 0;
+            for (int i = l; i <= r; i++) {
+                far = max(far, r + nums[i]);
+            }
+            l = r + 1;
+            r = far;
+            steps++;
+        }
+        
+        return steps;
+    }
+};
